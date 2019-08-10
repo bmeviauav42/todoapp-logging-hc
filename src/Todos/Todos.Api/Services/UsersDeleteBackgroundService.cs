@@ -19,7 +19,21 @@ namespace Todos.Api.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            // TODO 5. feladat
+            // keep re-running the task while the app is running
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                // try get an element from the queue, but do NOT remove
+                var popResult = await redisDb.SetRandomMemberAsync("DeleteUserQueue").ConfigureAwait(false);
+                if (!popResult.IsNullOrEmpty && popResult.TryParse(out int userId))
+                {
+                    // process the task/command
+                    await repository.DeleteAllOfUser(userId).ConfigureAwait(false);
+                    // only when the processing is complete do we remove the command from the queue
+                    await redisDb.SetRemoveAsync("DeleteUserQueue", userId).ConfigureAwait(false);
+                }
+
+                await Task.Delay(System.TimeSpan.FromMinutes(1)).ConfigureAwait(false);
+            }
         }
     }
 }

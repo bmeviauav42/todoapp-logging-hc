@@ -1,6 +1,20 @@
 version: "3.7"
 
 services:
+  apigateway:
+    image: traefik:v1.7.12
+    ports:
+      - "5080:80" # Port of the API Gaetway, which will be the port behind which the system will be published
+      - "5088:8080" # Dashboard of Traefik for troubleshooting
+    command:
+      - --api
+      - --docker
+      - --docker.exposedbydefault=false
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events (see .env file for Windows workaround to make this work)
+    networks:
+      - todoapp-network
+
   todos:
     image: "${REGISTRY_URL:-todoapp}/todos:${IMAGE_TAG:-latest}"
     build:
@@ -8,6 +22,13 @@ services:
       dockerfile: Todos/Todos.Api/Dockerfile # The Dockerfile to build; path is relative to the context, which is the solution root
     networks: # All microservices are connected by this private Docker network, which also provides DNS
       - todoapp-network
+    labels:
+      - "traefik.enable=true" # Enable publishing this service by Traefik
+      - "traefik.backend=todos" # Name of the backend (displayed in the Dashboard)
+      - "traefik.port=80" # Which port and protocol the backend is using
+      - "traefik.protocol=http"
+      - "traefik.frontend.rule=PathPrefix:/api/todos" # Routing rule
+      - "traefik.frontend.auth.forward.address=http://users/api/auth" # Forward authentication (note the address, the 'users' is the name of the service)
 
   web:
     image: "${REGISTRY_URL:-todoapp}/web:${IMAGE_TAG:-latest}"
@@ -16,6 +37,12 @@ services:
       dockerfile: Web/Docker/Dockerfile
     networks:
       - todoapp-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=web"
+      - "traefik.port=80"
+      - "traefik.protocol=http"
+      - "traefik.web.frontend.rule=PathPrefix:/"
 
   users:
     image: "${REGISTRY_URL:-todoapp}/users:${IMAGE_TAG:-latest}"
@@ -24,6 +51,14 @@ services:
       dockerfile: Users/Docker/Dockerfile
     networks:
       - todoapp-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=users"
+      - "traefik.port=80"
+      - "traefik.protocol=http"
+      - "traefik.auth.frontend.rule=PathPrefix:/api/auth" # Two routing rules are defined: this one, for the authentication, can be called by anyone
+      - "traefik.api.frontend.rule=PathPrefix:/api/users" # This other rule works on a different url scheme, and requires authentication
+      - "traefik.api.frontend.auth.forward.address=http://users/api/auth"
 
   mongodb:
     image: mongo:4.0.12
