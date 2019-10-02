@@ -19,7 +19,7 @@ Az alkalmazás teljes egészében platformfüggetlen. A kényelmes fejlesztéshe
 
 ## Feladatok
 
-A `master` ág állapotából kiindulva kövessük a [feladatokat](feladatok.md).
+A `master` ág állapotából indul el a labor.
 
 A kész megoldás elérhető a `megoldas` nevű ágon.
 
