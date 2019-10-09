@@ -25,13 +25,12 @@ services:
     networks:
       - todoapp-network
 
-  # TODO 3. feladat
   mongodb:
-    image: hello-world
-  #   networks:
-  #     - todoapp-network
-  #   volumes:
-  #     - todoapp-mongo-data:/data/db
+    image: mongo:4.0.12
+    networks:
+      - todoapp-network
+    volumes:
+      - todoapp-mongo-data:/data/db
 
   redis:
     image: redis:5.0.5-alpine
