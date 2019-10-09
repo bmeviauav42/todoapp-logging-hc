@@ -74,7 +74,7 @@ Az egyes szolgáltatások az alábbi URL-eken érhetően el:
   - Visual Studio-ból futtatva közvetlenül <http://localhost:5081/api/todos>
 - Users REST API
   - <http://localhost:5080/api/users>
-  - Visual Studio-ból futtatva közvetlenül <http://localhost:5083/api/todos>
+  - Visual Studio-ból futtatva közvetlenül <http://localhost:5083/api/users>
 - Traefik Dashboard: <http://localhost:5088>
 - Mongodb: <mongodb://localhost:27017>
 - Elasticsearch: <http://localhost:9200>
