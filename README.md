@@ -19,9 +19,11 @@ Az alkalmazás teljes egészében platformfüggetlen. A kényelmes fejlesztéshe
 
 ## Feladatok
 
-A `master` ág állapotából indul el a labor.
+A `master` ág egy félkész alkalmazás. Az adatbázisok és api gateway labor innen indul.
 
-A kész megoldás elérhető a `megoldas` nevű ágon.
+A helyben docker-compose alapokon működő megoldás elérhető a [megoldas/db-es-apigateway](https://github.com/bmeviauav42/todoapp/tree/megoldas/db-es-apigateway) ágon.
+
+A Kubernetes-be telepíthető verzió a [megoldas/kubernetes](https://github.com/bmeviauav42/todoapp/tree/megoldas/kubernetes) ágon található.
 
 ## Rendszer felépítése
 
