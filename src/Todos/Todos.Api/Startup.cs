@@ -21,7 +21,8 @@ namespace Todos.Api
         public void ConfigureServices(IServiceCollection services)
         {
             // for the routing of requests
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson();
 
             // adds all the database related component
             services.AddTodosDal(Configuration);
