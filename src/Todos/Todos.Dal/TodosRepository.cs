@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Nest;
 
 namespace Todos.Dal
@@ -7,10 +8,12 @@ namespace Todos.Dal
     internal class TodosRepository : ITodosRepository
     {
         private readonly ElasticClient elasticClient;
+        private readonly ILogger<TodosRepository> _logger;
 
-        public TodosRepository(ElasticClient elasticClient)
+        public TodosRepository(ElasticClient elasticClient, ILogger<TodosRepository> logger)
         {
             this.elasticClient = elasticClient;
+            _logger = logger;
         }
 
         public async Task<SearchTodoResult> Search(int? userId = null, string searchExpression = null)
@@ -56,7 +59,13 @@ namespace Todos.Dal
         {
             // This operation is ***NOT*** idempotent!
             var result = await elasticClient.IndexDocumentAsync(value.ToDal());
-            return await FindById(result.Id);
+            var todo = await FindById(result.Id);
+
+            // Oda kell figyelni, hogy a template-ben lévő propertyknek a JSON típusa (int, string, obj, array stb)
+            // első beszúráskor fixálva lesznek az ES sémájában
+            // Ha refaktoráljuk a template-et és mást próbálunk logolni, akkor szimplán nem fog beszúródni az ES-be
+            _logger.LogInformation("Todo with data {@todoitem} for user:{userid} has been created", todo, todo.UserId);
+            return todo;
         }
 
         public async Task<TodoItem> Update(string id, EditTodoRequest value)

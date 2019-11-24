@@ -8,6 +8,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_ElasticsearchUrl=http://elasticsearch:9200 # Configuration of microservices: only in effect in debug mode
       - ASPNETCORE_RedisUrl=redis:6379
+      - ASPNETCORE_LogsUrl=http://logs:9200
 
   web:
     ports:
