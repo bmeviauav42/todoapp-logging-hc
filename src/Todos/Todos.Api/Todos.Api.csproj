@@ -22,7 +22,7 @@
     <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
     <PackageReference Include="Serilog.Exceptions" Version="5.3.1" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
-    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.1.0-alpha0005" />
+    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup>
