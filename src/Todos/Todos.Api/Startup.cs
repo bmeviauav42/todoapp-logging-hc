@@ -42,15 +42,15 @@ namespace Todos.Api
                 services.AddHostedService<TestDataProvider>();
                 services.AddHealthChecksUI(setupSettings: settings =>
                 {
-                    settings.AddHealthCheckEndpoint("readiness", "http://localhost:5081/health/ready");
                     settings.AddHealthCheckEndpoint("liveness", "http://localhost:5081/health/live");
+                    settings.AddHealthCheckEndpoint("readiness", "http://localhost:5081/health/ready");
                 });
             }
 
             services.AddHealthChecks()
-                .AddCheck("readiness", () => HealthCheckResult.Healthy())
-                .AddRedis(Configuration.GetValue<string>("RedisUrl") ?? "redis:6379", tags: new[] { "liveness" })
-                .AddElasticsearch(Configuration.GetValue<string>("ElasticsearchUrl") ?? "http://elasticsearch:9200", tags: new[] { "liveness" });
+                .AddCheck("liveness", () => HealthCheckResult.Healthy())
+                .AddRedis(Configuration.GetValue<string>("RedisUrl") ?? "redis:6379", tags: new[] { "readiness" })
+                .AddElasticsearch(Configuration.GetValue<string>("ElasticsearchUrl") ?? "http://elasticsearch:9200", tags: new[] { "readiness" });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -65,14 +65,14 @@ namespace Todos.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions 
+                endpoints.MapHealthChecks("/health/live", new HealthCheckOptions 
                 {
-                    Predicate = r => r.Name.Contains("readiness"),
+                    Predicate = r => r.Name.Contains("liveness"),
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
-                endpoints.MapHealthChecks("/health/live", new HealthCheckOptions
+                endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions
                 {
-                    Predicate = r => r.Tags.Contains("liveness"),
+                    Predicate = r => r.Tags.Contains("readiness"),
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
                 if (env.IsDevelopment())
