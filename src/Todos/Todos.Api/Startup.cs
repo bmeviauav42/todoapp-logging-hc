@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
 
 namespace Todos.Api
 {
@@ -20,6 +22,7 @@ namespace Todos.Api
 
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment HostingEnvironment { get; }
+        public bool IsLive { get; private set; } = true;
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -40,15 +43,15 @@ namespace Todos.Api
             if (HostingEnvironment.IsDevelopment())
             {
                 services.AddHostedService<TestDataProvider>();
-                services.AddHealthChecksUI(setupSettings: settings =>
-                {
-                    settings.AddHealthCheckEndpoint("liveness", "http://localhost:5081/health/live");
-                    settings.AddHealthCheckEndpoint("readiness", "http://localhost:5081/health/ready");
-                });
+                //services.AddHealthChecksUI(setupSettings: settings =>
+                //{
+                //    settings.AddHealthCheckEndpoint("liveness", "http://localhost:5081/health/live");
+                //    settings.AddHealthCheckEndpoint("readiness", "http://localhost:5081/health/ready");
+                //});
             }
 
             services.AddHealthChecks()
-                .AddCheck("liveness", () => HealthCheckResult.Healthy())
+                .AddCheck("liveness", () => IsLive ? HealthCheckResult.Healthy() : HealthCheckResult.Unhealthy())
                 .AddRedis(Configuration.GetValue<string>("RedisUrl") ?? "redis:6379", tags: new[] { "readiness" })
                 .AddElasticsearch(Configuration.GetValue<string>("ElasticsearchUrl") ?? "http://elasticsearch:9200", tags: new[] { "readiness" });
         }
@@ -64,19 +67,24 @@ namespace Todos.Api
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapGet("/api/switch", async r =>
+                {
+                    IsLive = !IsLive;
+                    await r.Response.WriteAsync($"IsLive is now {IsLive}");
+                });
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/health/live", new HealthCheckOptions 
+                endpoints.MapHealthChecks("/api/health/live", new HealthCheckOptions 
                 {
                     Predicate = r => r.Name.Contains("liveness"),
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
-                endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions
+                endpoints.MapHealthChecks("/api/health/ready", new HealthCheckOptions
                 {
                     Predicate = r => r.Tags.Contains("readiness"),
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
-                if (env.IsDevelopment())
-                    endpoints.MapHealthChecksUI();
+                //if (env.IsDevelopment())
+                //    endpoints.MapHealthChecksUI();
             });
         }
     }
