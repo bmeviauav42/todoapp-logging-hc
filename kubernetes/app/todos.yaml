@@ -41,14 +41,14 @@ spec:
               containerPort: 80
           livenessProbe:
             httpGet:
-              path: /api/health/live
+              path: /health/live
               port: 80
               scheme: HTTP
             initialDelaySeconds: 5
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /api/health/ready
+              path: /health/ready
               port: 80
               scheme: HTTP
             initialDelaySeconds: 5
@@ -82,15 +82,15 @@ spec:
             backend:
               serviceName: todos # A service neve
               servicePort: http # A service-ben a port neve (lehet a port szama is)
-          - path: /api/health/live
+          - path: /health/live
             backend:
               serviceName: todos # A service neve
               servicePort: http # A service-ben a port neve (lehet a port szama is)
-          - path: /api/health/ready
+          - path: /health/ready
             backend:
               serviceName: todos # A service neve
               servicePort: http # A service-ben a port neve (lehet a port szama is)
-          - path: /api/switch
+          - path: /health/switch
             backend:
               serviceName: todos # A service neve
               servicePort: http # A service-ben a port neve (lehet a port szama is)

@@ -67,18 +67,18 @@ namespace Todos.Api
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/api/switch", async r =>
+                endpoints.MapGet("/health/switch", async r =>
                 {
                     IsLive = !IsLive;
                     await r.Response.WriteAsync($"IsLive is now {IsLive}");
                 });
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/api/health/live", new HealthCheckOptions 
+                endpoints.MapHealthChecks("/health/live", new HealthCheckOptions 
                 {
                     Predicate = r => r.Name.Contains("liveness"),
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
-                endpoints.MapHealthChecks("/api/health/ready", new HealthCheckOptions
+                endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions
                 {
                     Predicate = r => r.Tags.Contains("readiness"),
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
