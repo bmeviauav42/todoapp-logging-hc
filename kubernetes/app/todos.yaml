@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
         - name: todos
-          image: todoapp/todos:v1
+          image: todoapp/todos:latest
           ports:
             - name: http
               containerPort: 80

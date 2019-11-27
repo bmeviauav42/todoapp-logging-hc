@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
         - name: users
-          image: todoapp/users:v1
+          image: todoapp/users:latest
           ports:
             - name: http
               containerPort: 80
