@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+  labels:
+    app.kubernetes.io/name: mongodb
+spec:
+  serviceName: mongodb
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mongodb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo:4.0.12
+          ports:
+            - name: mongo
+              containerPort: 27017
+      restartPolicy: Always

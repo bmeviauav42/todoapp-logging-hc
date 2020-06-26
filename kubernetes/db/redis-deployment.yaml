@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment # Telepites tipusa
+metadata:
+  name: redis # Deployment neve
+  labels:
+    app.kubernetes.io/name: redis
+spec:
+  replicas: 1
+  selector: # Pod selector
+    matchLabels:
+      app.kubernetes.io/name: redis
+  template: # Podokra teendo metaadat
+    metadata:
+      labels:
+        app.kubernetes.io/name: redis
+    spec: # Pod leiro: kontener definicio
+      containers:
+        - name: redis
+          image: redis:5.0.5-alpine
+          ports: # Kontenerbol publikalt port
+            - name: redis # Nem kotelezo, hivatkozhatunk a portre nevvel
+              containerPort: 6379
+          readinessProbe: # Pelda readiness es livenes probe
+            exec:
+              command: # A kontenerben shellben lefuttatott ellenorzes
+                - sh
+                - -c
+                - "redis-cli -h localhost ping"
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "redis-cli -h localhost ping"
+            initialDelaySeconds: 15
+            periodSeconds: 60
+            timeoutSeconds: 1
+      restartPolicy: Always # A pod mindig induljon ujra
