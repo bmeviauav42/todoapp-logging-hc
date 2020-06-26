@@ -26,23 +26,36 @@ if is_development:
 @app.route("/api/users", methods=['GET'])
 @cross_origin()
 def get_all_users():
-    # TODO 3. feladat
-    return jsonify({[{'name': 'name', 'id': 1}]})
+    users_collection = mongo.todoapp.users
+    output = []
+    for u in users_collection.find():
+        output.append({'name': u['name'], 'id': u['id']})
+    return jsonify(output)
 
 
 # Get a particular user
 @app.route("/api/users/<int:id>", methods=['GET'])
 @cross_origin()
 def get_user(id):
-    # TODO 3. feladat
-    return make_response(jsonify({'error': 'Not found'}), 404)
+    users_collection = mongo.todoapp.users
+    u = users_collection.find_one({'id': id})
+    if u:
+        output = {'name': u['name'], 'id': u['id']}
+        return jsonify(output)
+    else:
+        return make_response(jsonify({'error': 'Not found'}), 404)
 
 # Delete a particular user
 @app.route("/api/users/<int:id>", methods=['DELETE'])
 @cross_origin()
 def delete_user(id):
-    # TODO 5. feladat
-    return make_response(jsonify({'error': 'Not found'}), 404)
+    users_collection = mongo.todoapp.users
+    result = users_collection.delete_one({'id': id})
+    if result.deleted_count > 0:
+        redis.sadd('DeleteUserQueue', str(id))
+        return make_response('OK', 200)
+    else:
+        return make_response(jsonify({'error': 'Not found'}), 404)
 
 
 # Decide if the caller is authenticated; used by forward authentication

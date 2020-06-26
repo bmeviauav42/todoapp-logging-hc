@@ -13,14 +13,6 @@ Az alkalmazás teljes egészében platformfüggetlen. A kényelmes fejlesztéshe
   - [Volume sharing](https://docs.microsoft.com/en-us/visualstudio/containers/troubleshooting-docker-errors?view=vs-2019#volume-sharing-is-not-enabled-enable-volume-sharing-in-the-docker-ce-for-windows-settings--linux-containers-only) engedélyezve
 - Postman
 
-## Feladatok
-
-A `master` ág egy félkész alkalmazás. Az adatbázisok és api gateway labor innen indul.
-
-A helyben docker-compose alapokon működő megoldás elérhető a [megoldas/db-es-apigateway](https://github.com/bmeviauav42/todoapp/tree/megoldas/db-es-apigateway) ágon.
-
-A Kubernetes-be telepíthető verzió a [megoldas/kubernetes](https://github.com/bmeviauav42/todoapp/tree/megoldas/kubernetes) ágon található.
-
 ## Rendszer felépítése
 
 A rendszer az alábbi mikroszolgáltatásokból épül fel:

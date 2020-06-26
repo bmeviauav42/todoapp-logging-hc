@@ -1,6 +1,21 @@
 version: "3.7"
 
 services:
+  apigateway:
+    image: traefik:v2.2.1
+    ports:
+      - "5080:80" # Port of the API Gateway, which will be the port behind which the system will be published
+      - "5088:8080" # Dashboard of Traefik for troubleshooting
+    command:
+      - "--api.insecure=true"
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events (see .env file for Windows workaround to make this work)
+    networks:
+      - todoapp-network
+
   todos:
     image: "${REGISTRY_URL:-todoapp}/todos:${IMAGE_TAG:-latest}"
     build:
@@ -8,6 +23,11 @@ services:
       dockerfile: Todos/Todos.Api/Dockerfile # The Dockerfile to build; path is relative to the context, which is the solution root
     networks: # All microservices are connected by this private Docker network, which also provides DNS
       - todoapp-network
+    labels:
+      - "traefik.enable=true" # Enable publishing this service by Traefik
+      - "traefik.http.routers.todos.rule=PathPrefix(`/api/todos`)" # Routing rule
+      - "traefik.http.middlewares.todos-auth.forwardauth.address=http://users/api/auth" # Forward authentication middleware definition
+      - "traefik.http.routers.todos.middlewares=todos-auth@docker" # Use the auth middleware in the /api/users route
 
   web:
     image: "${REGISTRY_URL:-todoapp}/web:${IMAGE_TAG:-latest}"
@@ -16,6 +36,9 @@ services:
       dockerfile: Web/Docker/Dockerfile
     networks:
       - todoapp-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=PathPrefix(`/`)" # Routing rule
 
   users:
     image: "${REGISTRY_URL:-todoapp}/users:${IMAGE_TAG:-latest}"
@@ -24,6 +47,12 @@ services:
       dockerfile: Users/Docker/Dockerfile
     networks:
       - todoapp-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.auth.rule=PathPrefix(`/api/auth`)" # Two routing rules are defined: this one, for the authentication, can be called by anyone
+      - "traefik.http.routers.users.rule=PathPrefix(`/api/users`)" # This other rule works on a different url scheme, and requires authentication
+      - "traefik.http.middlewares.users-auth.forwardauth.address=http://users/api/auth" # Forward authentication middleware definition
+      - "traefik.http.routers.users.middlewares=users-auth@docker" # Use the auth middleware in the /api/users route
 
   mongodb:
     image: mongo:4.2.8
