@@ -1,0 +1,17 @@
+name: Build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Build docker-compose
+        working-directory: ./src/Docker
+        run: |
+          docker-compose build

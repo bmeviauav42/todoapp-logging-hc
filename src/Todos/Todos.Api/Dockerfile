@@ -1,9 +1,9 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.1.12 AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.5 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:2.1.701 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.301 AS build
 WORKDIR /src
 COPY ["Todos/Todos.Api/Todos.Api.csproj", "Todos/Todos.Api/"]
 RUN dotnet restore "Todos/Todos.Api/Todos.Api.csproj"

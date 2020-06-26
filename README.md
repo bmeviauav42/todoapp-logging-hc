@@ -1,4 +1,4 @@
-# TODO alkalmazás mikroszolgáltatásokra építve
+# "To Do" alkalmazás mikroszolgáltatásokra építve
 
 ## Labor célja
 
@@ -11,11 +11,7 @@ Az alkalmazás teljes egészében platformfüggetlen. A kényelmes fejlesztéshe
 - Microsoft Visual Studio 2017/2019
 - Docker
   - [Volume sharing](https://docs.microsoft.com/en-us/visualstudio/containers/troubleshooting-docker-errors?view=vs-2019#volume-sharing-is-not-enabled-enable-volume-sharing-in-the-docker-ce-for-windows-settings--linux-containers-only) engedélyezve
-  - Minimum 2 GB memória allokálva a Docker-nek
-- NPM és YARN (path-ban elérhető)
-  - Csak akkor szükséges, ha a fronted kódban fejleszteni szeretnénk
 - Postman
-- 8 GB RAM
 
 ## Feladatok
 
@@ -34,14 +30,14 @@ A rendszer az alábbi mikroszolgáltatásokból épül fel:
 - _users_: Felhasználókat kezelő alkalmazás Python-ban, MongoDB adatbázisra épülve REST API-t biztosít.
 
 ```
-                   +----+     +-------+     +---------+
-                   |    +---->+ todos +--+->+ elastic |
-+-----------+      |API |     +-------+  |  +---------+
+                   +----+     +-------+      +---------+
+                   |    +---->+ todos +--+-->+ elastic |
++-----------+      |API |     +-------+  |   +---------+
 |  browser  +----->+gate|                |
-+-----------+      |way |                |  +-------+
-                   |    |     +------+   +->| redis |
-                   |    +---->+ web  |      +-------+
-                   |    |     +------+
++-----------+      |way |                |   +---------+
+                   |    |     +-------+  +-->|  redis  |
+                   |    +---->+  web  |      +---------+
+                   |    |     +-------+
                    |    |
                    |    |     +-------+      +---------+
                    |    +---->+ users +----->+ mongodb |
@@ -80,3 +76,9 @@ Az egyes szolgáltatások az alábbi URL-eken érhetően el:
 - Traefik Dashboard: <http://localhost:5088>
 - Mongodb: <mongodb://localhost:27017>
 - Elasticsearch: <http://localhost:9200>
+
+---
+
+Az itt található oktatási segédanyagok a BMEVIAUAV42 tárgy hallgatóinak készültek. Az anyagok oly módú felhasználása, amely a tárgy oktatásához nem szorosan kapcsolódik, csak a szerző(k) és a forrás megjelölésével történhet.
+
+Az anyagok a tárgy keretében oktatott kontextusban értelmezhetőek. Az anyagokért egyéb felhasználás esetén a szerző(k) felelősséget nem vállalnak.

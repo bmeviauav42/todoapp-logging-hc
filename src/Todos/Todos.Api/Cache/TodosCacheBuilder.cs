@@ -9,7 +9,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             var redisUrl = config.GetValue<string>("RedisUrl") ?? "redis:6379";
 
-            services.AddDistributedRedisCache(options =>
+            services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = redisUrl;
                 options.InstanceName = "todos";

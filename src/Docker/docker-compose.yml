@@ -26,19 +26,19 @@ services:
       - todoapp-network
 
   mongodb:
-    image: mongo:4.0.12
+    image: mongo:4.2.8
     networks:
       - todoapp-network
     volumes:
       - todoapp-mongo-data:/data/db
 
   redis:
-    image: redis:5.0.5-alpine
+    image: redis:6.0.5-alpine
     networks:
       - todoapp-network
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.3.0
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.8.0
     environment:
       - cluster.name=elasticsearch # Settings to start Elasticsearch in a single-node development environment
       - node.name=elasticsearch
