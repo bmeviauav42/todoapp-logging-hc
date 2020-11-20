@@ -14,13 +14,6 @@ services:
     ports:
       - "5082:80"
     image: todoapp/web:dev
-    build:
-      target: base # When debugging, do not complete the entire Dockerfile, only build the target with name base
-    volumes: # Then mount the source files from the host, built as part of the related csproj
-      - type: bind
-        source: ..\web\client\build
-        target: /app/wwwroot
-        read_only: true
 
   users:
     ports:

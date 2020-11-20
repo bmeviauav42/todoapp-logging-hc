@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 
 namespace Todos.Api.Cache
 {
@@ -24,17 +25,17 @@ namespace Todos.Api.Cache
 
         public async Task<TodoItem> TryGet(string todoItemId)
         {
-            var cacheItem = await cache.GetStringAsync(getCacheKey(todoItemId));
-            if (cacheItem == null)
+            var valueString = await cache.GetStringAsync(getCacheKey(todoItemId));
+            if (valueString == null)
                 return null;
             else
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<TodoItem>(cacheItem);
+                return JsonConvert.DeserializeObject<TodoItem>(valueString);
         }
 
         public async Task Set(TodoItem value)
         {
-            var valueAsString = Newtonsoft.Json.JsonConvert.SerializeObject(value); // the cache can only store byte[] or string, hence the manual serialization
-            await cache.SetStringAsync(key: getCacheKey(value.Id), value: valueAsString, options: cacheEntryOptions);
+            var valueString = JsonConvert.SerializeObject(value); // the cache can only store byte[] or string, hence the manual serialization
+            await cache.SetStringAsync(key: getCacheKey(value.Id), value: valueString, options: cacheEntryOptions);
         }
 
         public Task Invalidate(string todoItemId) => cache.RemoveAsync(getCacheKey(todoItemId));

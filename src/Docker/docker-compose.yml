@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   apigateway:
-    image: traefik:v2.0.1
+    image: traefik:v2.2.1
     ports:
       - "5090:80" # Port of the API Gateway, which will be the port behind which the system will be published
       - "5098:8080" # Dashboard of Traefik for troubleshooting
@@ -55,19 +55,19 @@ services:
       - "traefik.http.routers.users.middlewares=users-auth@docker" # Use the auth middleware in the /api/users route
 
   mongodb:
-    image: mongo:4.0.12
+    image: mongo:4.2.8
     networks:
       - todoapp-network
     volumes:
       - todoapp-mongo-data:/data/db
 
   redis:
-    image: redis:5.0.5-alpine
+    image: redis:6.0.5-alpine
     networks:
       - todoapp-network
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.3.0
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.8.0
     environment:
       - cluster.name=elasticsearch # Settings to start Elasticsearch in a single-node development environment
       - node.name=elasticsearch
