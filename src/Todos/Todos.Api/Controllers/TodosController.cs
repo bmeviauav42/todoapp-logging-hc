@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Todos.Dal;
 
 namespace Todos.Api.Controllers
@@ -57,7 +57,7 @@ namespace Todos.Api.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         public async Task<ActionResult<TodoItem>> Post([FromBody] CreateNewTodoRequest value)
         {
@@ -66,7 +66,7 @@ namespace Todos.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(202)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<TodoItem>> Put(string id, [FromBody] EditTodoRequest value)
         {
