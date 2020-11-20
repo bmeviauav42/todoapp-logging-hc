@@ -16,7 +16,7 @@ spec:
         app.kubernetes.io/name: elasticsearch
     spec:
       containers:
-        - image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.3.0
+        - image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.8.0
           name: elasticsearch
           ports: # A kontener ket portot is publikal (9200-at hasznaljuk a 9300 az Elasticsearch klaszterezesehez kellene)
             - containerPort: 9200

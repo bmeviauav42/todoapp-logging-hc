@@ -1,29 +1,11 @@
 ﻿<Project Sdk="Microsoft.Build.NoTargets/1.0.40">
+
+  <!-- Dummy project so that all microservices are present in the solution -->
+  <!-- Build of this project is handled by Dockerfile -->
+
   <PropertyGroup>
     <!-- We have to specify a dummy target framework so VS builds the project correctly -->
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RuntimeFrameworkVersion>2.1.12</RuntimeFrameworkVersion>
-
-    <!-- Disable the fast startup check so VS is forced to compare the frontend files -->
-    <DisableFastUpToDateCheck>True</DisableFastUpToDateCheck>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <!-- We want to build the frontend if -->
-    <!-- Any of the source files change -->
-    <FrontendInputs Include="$(ProjectDir)Client\src\**" />
-    <!-- Or we updated any third-party libraries -->
-    <FrontendInputs Include="$(ProjectDir)Client\package.json" />
-    <FrontendInputs Include="$(ProjectDir)Client\yarn.lock" />
-
-    <!-- Since all output files are produced basically at the same time, it's sufficient to only check for one of the files -->
-    <!-- index.html is the only file that's consistently named even between debug and release builds so it should be a good choice -->
-    <FrontendOutputs Include="$(ProjectDir)Client\build\index.html" />
-  </ItemGroup>
-
-  <!-- Use the regular frontend build scripts to build the project -->
-  <Target Name="BuildFrontend" Inputs="@(FrontendInputs)" Outputs="@(FrontendOutputs)" BeforeTargets="Build">
-    <Exec WorkingDirectory="Client" Command="yarn" />
-    <Exec WorkingDirectory="Client" Command="yarn build" />
-  </Target>
 </Project>

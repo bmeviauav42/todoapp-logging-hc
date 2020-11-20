@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.Build.NoTargets/1.0.40">
+  
+  <!-- Dummy project so that all microservices are present in the solution -->
+  <!-- Build of this project is handled by Dockerfile -->
+
   <PropertyGroup>
     <!-- We have to specify a dummy target framework so VS builds the project correctly -->
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RuntimeFrameworkVersion>2.1.12</RuntimeFrameworkVersion>
-
-    <!-- Disable the fast startup check so VS is forced to compare the source files -->
-    <DisableFastUpToDateCheck>True</DisableFastUpToDateCheck>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <!-- If the timestamp of the input files (above) is newer than the timestamp of the dummy output file, MSBuild will trigger the build -->
-  <Target Name="BuildFrontend" Inputs="@(PyInputs)" Outputs="@(PyOutputs)" BeforeTargets="Build">
+  <Target Name="BuildPython" Inputs="@(PyInputs)" Outputs="@(PyOutputs)" BeforeTargets="Build">
     <!-- Build the container as described in the dockerfile -->
     <Exec WorkingDirectory="$(SolutionDir)" Command="docker build -t todoapp/users:dev -f users/docker/Dockerfile ." />
     <!-- Touch the dummy output file. Its timestamp will be the time of build. -->

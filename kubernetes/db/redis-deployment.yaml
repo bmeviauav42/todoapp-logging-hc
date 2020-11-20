@@ -16,7 +16,7 @@ spec:
     spec: # Pod leiro: kontener definicio
       containers:
         - name: redis
-          image: redis:5.0.5-alpine
+          image: redis:6.0.5-alpine
           ports: # Kontenerbol publikalt port
             - name: redis # Nem kotelezo, hivatkozhatunk a portre nevvel
               containerPort: 6379
