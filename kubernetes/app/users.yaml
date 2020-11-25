@@ -34,7 +34,8 @@ spec:
     spec:
       containers:
         - name: users
-          image: todoapp/users:latest
+          image: todoapp/users:v1
+          imagePullPolicy: IfNotPresent
           ports:
             - name: http
               containerPort: 80
