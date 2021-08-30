@@ -47,7 +47,7 @@ spec:
               value: "redis:6379"
       restartPolicy: Always
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: todos
@@ -64,6 +64,9 @@ spec:
     - http:
         paths:
           - path: /api/todos
+            pathType: Prefix
             backend:
-              serviceName: todos # A service neve
-              servicePort: http # A service-ben a port neve (lehet a port szama is)
+              service:
+                name: todos # A service neve
+                port:
+                  name: http # A service-ben a port neve (lehet a port szama is number nevvel)
