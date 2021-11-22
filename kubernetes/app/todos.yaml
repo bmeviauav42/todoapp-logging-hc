@@ -85,3 +85,10 @@ spec:
                 name: todos # A service neve
                 port:
                   name: http # A service-ben a port neve (lehet a port szama is number nevvel)
+          - path: /health
+            pathType: Prefix
+            backend:
+              service:
+                name: todos # A service neve
+                port:
+                  name: http # A service-ben a port neve (lehet a port szama is number nevvel)
