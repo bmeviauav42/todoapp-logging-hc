@@ -6,6 +6,10 @@ using Serilog.Exceptions;
 using Serilog.Sinks.Elasticsearch;
 using System;
 
+using Serilog;
+using Serilog.Exceptions;
+using Serilog.Sinks.Elasticsearch;
+
 namespace Todos.Api
 {
     public class Program
