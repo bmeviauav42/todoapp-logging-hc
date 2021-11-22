@@ -48,7 +48,7 @@ spec:
               value: "true" # A demo adatok letrehozasahoz hasznaljuk
       restartPolicy: Always
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: users-api
@@ -65,11 +65,14 @@ spec:
     - http:
         paths:
           - path: /api/users
+            pathType: Prefix
             backend:
-              serviceName: users
-              servicePort: http
+              service:
+                name: users
+                port:
+                  name: http
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: users-auth
@@ -82,6 +85,9 @@ spec:
     - http:
         paths:
           - path: /api/auth
+            pathType: Prefix
             backend:
-              serviceName: users
-              servicePort: http
+              service:
+                name: users
+                port:
+                  name: http

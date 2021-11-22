@@ -8,9 +8,8 @@ A labor célja bemutatni a mikroszolgáltatásokra épülő rendszerek esetében
 
 Az alkalmazás teljes egészében platformfüggetlen. A kényelmes fejlesztéshez azonban a forráskód Microsoft Visual Studio-t feltételez.
 
-- Microsoft Visual Studio 2017/2019
-- Docker
-  - [Volume sharing](https://docs.microsoft.com/en-us/visualstudio/containers/troubleshooting-docker-errors?view=vs-2019#volume-sharing-is-not-enabled-enable-volume-sharing-in-the-docker-ce-for-windows-settings--linux-containers-only) engedélyezve
+- Microsoft Visual Studio 2017/2019/2022
+- Docker WSL2 támogatással
 - Postman
 
 ## Rendszer felépítése
