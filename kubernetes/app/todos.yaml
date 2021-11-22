@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
         - name: todos
-          image: todoapp/todos:latest
+          image: todoapp/todos:v1
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -62,7 +62,7 @@ spec:
               value: "redis:6379"
       restartPolicy: Always
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: todos
@@ -79,18 +79,9 @@ spec:
     - http:
         paths:
           - path: /api/todos
+            pathType: Prefix
             backend:
-              serviceName: todos # A service neve
-              servicePort: http # A service-ben a port neve (lehet a port szama is)
-          - path: /health/live
-            backend:
-              serviceName: todos # A service neve
-              servicePort: http # A service-ben a port neve (lehet a port szama is)
-          - path: /health/ready
-            backend:
-              serviceName: todos # A service neve
-              servicePort: http # A service-ben a port neve (lehet a port szama is)
-          - path: /health/switch
-            backend:
-              serviceName: todos # A service neve
-              servicePort: http # A service-ben a port neve (lehet a port szama is)
+              service:
+                name: todos # A service neve
+                port:
+                  name: http # A service-ben a port neve (lehet a port szama is number nevvel)
